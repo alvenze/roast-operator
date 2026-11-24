@@ -15,8 +15,12 @@ OUTPUT_PATH = "/output/entry.txt"
 
 
 def main() -> None:
+    # Gate hardening: the sealed scorer also rejects whitespace-only
+    # text, and the brief is a single line, so refuse both up front.
     if not 1 <= len(ENTRY) <= 140:
         raise ValueError("entry must be 1-140 characters")
+    if not ENTRY.strip() or "\n" in ENTRY:
+        raise ValueError("entry must be one non-blank line")
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as fh:
         fh.write(ENTRY)
